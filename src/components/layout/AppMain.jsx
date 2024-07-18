@@ -1,9 +1,9 @@
-import Search from '../MovieList/MovieList'
+import MovieList from '../MovieList/MovieList'
 
 export default function AppMain() {
   return (
     <>
-      <Search />
+      <MovieList />
     </>
   )
 }

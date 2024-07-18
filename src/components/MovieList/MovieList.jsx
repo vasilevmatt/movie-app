@@ -101,7 +101,7 @@ export default function MovieList() {
             wrap
             gap={36}
             justify="center"
-            style={{ width: 'clamp(800px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
+            style={{ width: 'clamp(100px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
           >
             {movies}
           </Flex>
