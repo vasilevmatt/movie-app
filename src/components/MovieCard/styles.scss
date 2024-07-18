@@ -6,6 +6,13 @@
 	-moz-box-shadow: 7px 10px 28px -12px rgba(0,0,0,0.44);
 	box-shadow: 7px 10px 28px -12px rgba(0,0,0,0.44);
 
+	&__text-part {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 267px;
+	}
+
 	&__image {
 		width: 183px;
 		height: 280px;
@@ -17,10 +24,28 @@
 		overflow: hidden;
 	}
 
+	&__header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: baseline;
+	}
+
 	&__heading {
 		font-weight: 400;
 		font-size: 20px;
 		margin: 10px 0;
+		width: 190px;
+	}
+
+	&__current-rating {
+    height: 30px;
+    width: 30px;
+    line-height: 25px;
+
+		text-align: center;
+    font-size: 12px;
+		border-radius: 50%;
 	}
 
 	&__genre {
@@ -31,11 +56,24 @@
 	&__date {
 		color: #827E7E;
 		font-size: 12px;
+		margin-top: 0;
 	}
 
 	&__description {
 		font-size: 12px;
 		line-height: 1.8;
+		max-height: 130px;
+	}
+
+	&__rate {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
+
+		> li {
+			width: 15px;
+			height: 15px;
+		}
 	}
 
 }

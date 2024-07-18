@@ -1,4 +1,4 @@
-import Search from '../Search/Search'
+import Search from '../MovieList/MovieList'
 
 export default function AppMain() {
   return (
