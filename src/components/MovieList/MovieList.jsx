@@ -1,17 +1,13 @@
 import { useState, useEffect, useCallback, useContext } from 'react'
 import { debounce } from 'lodash'
 import MovieService from '../../services/MovieService'
-import { Flex, notification, Pagination, Spin } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import { Flex, notification, Pagination } from 'antd'
 import MovieCard from '../MovieCard/MovieCard'
 import './index.scss'
 import ErrorAlert from '../utils/ErrorAlert'
 import WarningAlert from '../utils/WarningAlert'
 import AppContext from '../../context/app-context'
-
-const LoadingIndicator = () => (
-  <Spin className="search__loading" indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-)
+import LoadingIndicator from '../utils/LoadingIndicator'
 
 const SearchInput = ({ value, onChange }) => (
   <input className="search__input" type="text" value={value} onChange={onChange} placeholder="Type to search..." />
@@ -26,29 +22,50 @@ export default function MovieList() {
 
   const { hasError, error, activeTab, guestSession } = useContext(AppContext)
 
+  const Movies = ({ loading, movies }) => {
+    if (loading) {
+      return <LoadingIndicator />
+    }
+    if (!loading && movies === 0) {
+      return <WarningAlert title="No movies found" subTitle="Please check your input and try some other keywords." />
+    }
+
+    return (
+      <Flex
+        wrap
+        gap={36}
+        justify="center"
+        style={{ width: 'clamp(100px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
+      >
+        {movies}
+      </Flex>
+    )
+  }
+
   const movieService = new MovieService()
   const getResponse = async (value, pageNumber) => {
+    setLoading(true)
     try {
-      const rated = activeTab === 2
-      const res = rated
-        ? await movieService.searchRatedMovie(pageNumber, guestSession)
-        : await movieService.searchMovie(value, pageNumber)
+      const res =
+        activeTab === 2
+          ? await movieService.searchRatedMovie(pageNumber, guestSession)
+          : await movieService.searchMovie(value, pageNumber)
+
       setTotalResultsNum(res.total_results)
       if (res.total_results === 0) {
-        setLoading(false)
         setMovies(0)
       } else {
         setMovies(res.results.map((item) => <MovieCard {...item} key={item.id} />))
-        setLoading(false)
       }
     } catch (e) {
-      setLoading(false)
-      console.log(e)
-      if (e == 'Error: 404') openNotification()
       error(true)
       setMovies([])
+      if (e == 'Error: 404') openNotification()
+    } finally {
+      setLoading(false)
     }
   }
+
   const [api, contextHolder] = notification.useNotification()
   const openNotification = () => {
     api.open({
@@ -89,23 +106,10 @@ export default function MovieList() {
   return (
     <>
       {contextHolder}
-
       <div className="search">
         {activeTab === 1 && <SearchInput value={searchValue} onChange={handleInputChange} />}
-        {loading && <LoadingIndicator />}
         {hasError && <ErrorAlert />}
-        {!loading && movies === 0 ? (
-          <WarningAlert title="No movies found" subTitle="Please check your input and try some other keywords." />
-        ) : !loading ? (
-          <Flex
-            wrap
-            gap={36}
-            justify="center"
-            style={{ width: 'clamp(100px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
-          >
-            {movies}
-          </Flex>
-        ) : null}
+        <Movies loading={loading} movies={movies} />
         <Pagination
           className="search__pagination"
           align="center"
