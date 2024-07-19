@@ -13,6 +13,26 @@ const SearchInput = ({ value, onChange }) => (
   <input className="search__input" type="text" value={value} onChange={onChange} placeholder="Type to search..." />
 )
 
+const Movies = ({ loading, movies }) => {
+  if (loading) {
+    return <LoadingIndicator />
+  }
+  if (!loading && movies === 0) {
+    return <WarningAlert title="No movies found" subTitle="Please check your input and try some other keywords." />
+  }
+
+  return (
+    <Flex
+      wrap
+      gap={36}
+      justify="center"
+      style={{ width: 'clamp(100px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
+    >
+      {movies}
+    </Flex>
+  )
+}
+
 export default function MovieList() {
   const [searchValue, setSearchValue] = useState('return')
   const [movies, setMovies] = useState([])
@@ -21,26 +41,6 @@ export default function MovieList() {
   const [totalResultsNum, setTotalResultsNum] = useState(0)
 
   const { hasError, error, activeTab, guestSession } = useContext(AppContext)
-
-  const Movies = ({ loading, movies }) => {
-    if (loading) {
-      return <LoadingIndicator />
-    }
-    if (!loading && movies === 0) {
-      return <WarningAlert title="No movies found" subTitle="Please check your input and try some other keywords." />
-    }
-
-    return (
-      <Flex
-        wrap
-        gap={36}
-        justify="center"
-        style={{ width: 'clamp(100px, 95vw, 1010px)', marginLeft: 'auto', marginRight: 'auto' }}
-      >
-        {movies}
-      </Flex>
-    )
-  }
 
   const movieService = new MovieService()
   const getResponse = async (value, pageNumber) => {

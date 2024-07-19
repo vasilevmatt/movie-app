@@ -10,8 +10,12 @@
 
 # production
 /build
+
+# env
 .env
 .env.*
+/public/env.js
+
 
 # misc
 .DS_Store
